@@ -57,4 +57,17 @@ def sign_data(private_key, data: bytes) -> bytes:
     )
 
 def verify_signature(public_key, signature: bytes, data: bytes) -> bool:
-    pass
+    #verifikon nenshkrimin dixhital RSA-PSS
+    try:
+        public_key.verify(
+            signature,
+            data,
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+        )
+        return True
+    except Exception:
+        return False

@@ -11,3 +11,10 @@ def generate_rsa_keys():
         backend=default_backend()
     )
     return private_key, private_key.public_key()
+
+def serialize_public_key(public_key) -> bytes:
+    #kthen public key ne PEM bytes per e dergu
+    return public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )

@@ -46,7 +46,15 @@ def rsa_decrypt(private_key, ciphertext: bytes) -> bytes:
     )
 
 def sign_data(private_key, data: bytes) -> bytes:
-    pass
+    #ben nenshkrimin e hash me private key RSA-PSS
+    return private_key.sign(
+        data,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+        ),
+        hashes.SHA256()
+    )
 
 def verify_signature(public_key, signature: bytes, data: bytes) -> bool:
     pass

@@ -35,4 +35,12 @@ def rsa_encrypt(public_key, plaintext: bytes) -> bytes:
     )
 
 def rsa_decrypt(private_key, ciphertext: bytes) -> bytes:
-    pass
+    #dekripton AES key me RSA private key
+    return private_key.decrypt(
+        ciphertext,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )

@@ -44,3 +44,9 @@ def rsa_decrypt(private_key, ciphertext: bytes) -> bytes:
             label=None
         )
     )
+
+def sign_data(private_key, data: bytes) -> bytes:
+    pass
+
+def verify_signature(public_key, signature: bytes, data: bytes) -> bool:
+    pass

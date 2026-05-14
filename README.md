@@ -54,4 +54,38 @@ secure-file-transfer/
 
 ## Ekzekutimi i Projektit
 
+### 1. Krijimi i Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### 2. Aktivizimi i Virtual Environment
+
+```
+venv\Scripts\activate
+```
+
+### 3. Instalimi i Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+### 4. Nisja e Serverit
+
+Hapni një terminal dhe ekzekutoni:
+
+```
+python server.py
+```
+
+### 5. Nisja e Klientit
+
+Hapni një terminal tjetër dhe ekzekutoni:
+
+```
+python client.py
+```
+
 ## Shembuj të Ekzekutimit

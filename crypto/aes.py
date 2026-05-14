@@ -51,6 +51,10 @@ def aes_decrypt(key: bytes, iv: bytes, tag: bytes, ciphertext: bytes) -> bytes:
     ).decryptor()
 
     return decryptor.update(ciphertext) + decryptor.finalize()
+def send_msg(sock, data: bytes) -> None:
+    # dergon mesazh
+    length = struct.pack('>I', len(data))
+    sock.sendall(length + data)
 
 
 def send_msg(sock, data: bytes) -> None:

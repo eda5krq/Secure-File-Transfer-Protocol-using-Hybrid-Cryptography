@@ -6,7 +6,7 @@ from cryptography.hazmat.backends import default_backend
 
 
 def _validate_aes_key(key: bytes):
-    # AES-256 kërkon çelës prej saktësisht 32 bytes
+    # AES-256 kerkon çeles prej saktesisht 32 bytes
     if not isinstance(key, bytes):
         raise TypeError("AES key must be bytes")
 
@@ -15,7 +15,7 @@ def _validate_aes_key(key: bytes):
 
 
 def aes_encrypt(key: bytes, plaintext: bytes) -> tuple:
-    # Enkripton të dhënat me AES-256-GCM
+    # Enkripton te dhenat me AES-256-GCM
     _validate_aes_key(key)
 
     if not isinstance(plaintext, bytes):
@@ -35,7 +35,7 @@ def aes_encrypt(key: bytes, plaintext: bytes) -> tuple:
 
 
 def aes_decrypt(key: bytes, iv: bytes, tag: bytes, ciphertext: bytes) -> bytes:
-    # Dekripton të dhënat me AES-256-GCM
+    # Dekripton te dhenat me AES-256-GCM
     _validate_aes_key(key)
 
     if len(iv) != 12:
@@ -54,7 +54,7 @@ def aes_decrypt(key: bytes, iv: bytes, tag: bytes, ciphertext: bytes) -> bytes:
 
 
 def send_msg(sock, data: bytes) -> None:
-    # Dërgon mesazh përmes socket duke ia vendosur gjatësinë përpara
+    # Dergon mesazh permes socket duke ia vendosur gjatesine perpara
     if not isinstance(data, bytes):
         raise TypeError("Data must be bytes")
 
@@ -63,7 +63,7 @@ def send_msg(sock, data: bytes) -> None:
 
 
 def recv_msg(sock) -> bytes:
-    # Merr mesazh nga socket duke lexuar së pari gjatësinë
+    # Merr mesazh nga socket duke lexuar se pari gjatësine
     raw_len = _recv_exactly(sock, 4)
     length = struct.unpack(">I", raw_len)[0]
 
@@ -71,7 +71,7 @@ def recv_msg(sock) -> bytes:
 
 
 def _recv_exactly(sock, n: int) -> bytes:
-    # Lexon saktësisht n bytes nga socket
+    # Lexon n bytes nga socket
     data = b""
 
     while len(data) < n:

@@ -1,29 +1,63 @@
+import socket
 import os
-import struct
+import json
 
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
+from crypto.rsa import generate_rsa_keys, serialize_public_key, load_public_key_from_bytes, rsa_decrypt
+from crypto.aes import send_msg, recv_msg
+from handlers.upload import server_upload
+from handlers.download import server_download
 
+HOST = '127.0.0.1'
+PORT = 5005
+STORAGE_DIR = "server_storage"
 
-def aes_encrypt(key: bytes, plaintext: bytes) -> tuple:
-    # enkripton skedarin me AES-256-GCM
-    iv = os.urandom(12)
-    encryptor = Cipher(
-        algorithms.AES(key),
-        modes.GCM(iv),
-        backend=default_backend()
-    ).encryptor()
+def exchange_keys(conn, server_private_key, server_public_key):
+    print("[*] Faza 1: Shkëmbimi i çelësave...")
+    send_msg(conn, serialize_public_key(server_public_key))
+    print("    -> Çelësi publik i serverit u dërgua.")
 
-    ciphertext = encryptor.update(plaintext) + encryptor.finalize()
-    return iv, encryptor.tag, ciphertext
+    client_public_key = load_public_key_from_bytes(recv_msg(conn))
+    print("    -> Çelësi publik i klientit u mor.")
 
+    aes_key = rsa_decrypt(server_private_key, recv_msg(conn))
+    print("    -> Çelësi AES u dekriptua.")
+    print("[+] Faza 1 KOMPLETUAR!\n")
 
-def aes_decrypt(key: bytes, iv: bytes, tag: bytes, ciphertext: bytes) -> bytes:
-    # dekripton skedarin me AES-256-GCM
-    decryptor = Cipher(
-        algorithms.AES(key),
-        modes.GCM(iv, tag),
-        backend=default_backend()
-    ).decryptor()
+    return aes_key, client_public_key
 
-    return decryptor.update(ciphertext) + decryptor.finalize()
+    def handle_client(conn, addr, server_private_key, server_public_key):
+        # koordinon krejt fazat per ni klient
+        print(f"\n{'─' * 50}")
+        print(f"[+] Klienti u lidh: {addr}")
+
+        try:
+            aes_key, client_public_key = exchange_keys(
+                conn,
+                server_private_key,
+                server_public_key
+            )
+
+            print("[*] Faza 2: Duke pritur komandën...")
+
+            command = json.loads(recv_msg(conn).decode())
+            action = command.get("action")
+            filename = command.get("filename")
+
+            print(f"    -> {action.upper()} | '{filename}'")
+
+            if action == "upload":
+                server_upload(conn, aes_key, client_public_key, filename)
+
+            elif action == "download":
+                server_download(conn, aes_key, server_private_key, filename)
+
+            else:
+                send_msg(conn, b"ERROR: Unknown command")
+
+        except Exception as e:
+            print(f"[!] Gabim: {e}")
+
+        finally:
+            conn.close()
+            print(f"[-] Lidhja me {addr} u mbyll.")
+            print(f"{'─' * 50}")

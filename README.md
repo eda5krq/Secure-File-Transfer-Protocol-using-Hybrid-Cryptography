@@ -110,14 +110,14 @@ https://github.com/user-attachments/assets/3b6f92e2-7676-45c6-a6ae-d5c2d325e426
 
 Pas lidhjes së suksesshme me serverin, përdoruesi mund të zgjedhë një nga operacionet e mëposhtme:
 
-- **Ngarko skedar (Upload)**  
+- **Ngarko file (Upload)**  
 
   Nëse përdoruesi zgjedh opsionin `1`, aplikacioni kërkon rrugën e file që dëshiron të ngarkojë. Pas zgjedhjes së file, klienti e lexon përmbajtjen e tij, gjeneron hash-in SHA-256 dhe krijon nënshkrimin dixhital. Më pas file enkriptohet me AES-256-GCM dhe dërgohet në mënyrë të sigurt te serveri. Pas pranimit dhe verifikimit të file, serveri e ruan atë në folderin `server_storage`, i cili krijohet automatikisht nëse nuk ekziston.
 
   <img width="526" height="246" alt="image" src="https://github.com/user-attachments/assets/a035b182-e247-4955-841d-054bc7e1f7a0" />
 
 
-- **Shkarko skedar (Download)**  
+- **Shkarko file (Download)**  
 
   Nëse përdoruesi zgjedh opsionin `2`, aplikacioni kërkon emrin e file që dëshiron të shkarkojë nga serveri. Serveri e gjen file, e enkripton me AES-256-GCM dhe e dërgon te klienti së bashku me hash-in SHA-256 dhe nënshkrimin dixhital. Klienti e dekripton file, verifikon integritetin dhe autenticitetin e tij, dhe më pas e ruan në folderin `client_downloads`, i cili krijohet automatikisht nëse nuk ekziston.
 
